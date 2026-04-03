@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 export default function Navbar() {
   return (
@@ -12,6 +13,7 @@ export default function Navbar() {
           <Link href="/workouts">Workouts</Link>
           <Link href="/nutrition">Nutrition</Link>
           <Link href="/goals">Goals</Link>
+          <LogoutButton />
         </div>
       </nav>
     </header>

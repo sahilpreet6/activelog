@@ -9,6 +9,8 @@ type WorkoutBody = {
   duration?: number;
 };
 
+type WorkoutRow = Record<string, unknown>;
+
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
@@ -49,7 +51,21 @@ export async function POST(request: Request) {
     ]);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const fallback = await supabase.from("workouts").insert([
+        {
+          user_id: user.id,
+          exercise_name: exercise,
+          sets,
+          reps,
+          duration,
+        },
+      ]);
+
+      if (fallback.error) {
+        return NextResponse.json({ error: fallback.error.message }, { status: 500 });
+      }
+
+      return NextResponse.json({ message: "Workout created", data: fallback.data }, { status: 201 });
     }
 
     return NextResponse.json({ message: "Workout created", data }, { status: 201 });
@@ -87,7 +103,18 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ workouts: (data ?? []) as Workout[] }, { status: 200 });
+    const workouts = ((data ?? []) as WorkoutRow[]).map((row) => ({
+      id: String(row.id ?? ""),
+      user_id: String(row.user_id ?? ""),
+      exercise: String(row.exercise ?? row.exercise_name ?? ""),
+      sets: Number(row.sets ?? 0),
+      reps: Number(row.reps ?? 0),
+      duration: Number(row.duration ?? 0),
+      date: String(row.date ?? row.created_at ?? ""),
+      created_at: String(row.created_at ?? ""),
+    })) as Workout[];
+
+    return NextResponse.json({ workouts }, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Unable to fetch workouts." }, { status: 500 });
   }

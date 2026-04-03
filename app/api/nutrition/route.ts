@@ -10,6 +10,8 @@ type MealBody = {
   fat?: number;
 };
 
+type MealRow = Record<string, unknown>;
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -39,7 +41,18 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ meals: (data ?? []) as Meal[] }, { status: 200 });
+    const meals = ((data ?? []) as MealRow[]).map((row) => ({
+      id: String(row.id ?? ""),
+      user_id: String(row.user_id ?? ""),
+      name: String(row.name ?? row.food_name ?? ""),
+      calories: Number(row.calories ?? 0),
+      protein: Number(row.protein ?? 0),
+      carbs: Number(row.carbs ?? 0),
+      fat: Number(row.fat ?? row.fats ?? 0),
+      created_at: String(row.created_at ?? ""),
+    })) as Meal[];
+
+    return NextResponse.json({ meals }, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Unable to fetch meals." }, { status: 500 });
   }
@@ -83,7 +96,22 @@ export async function POST(request: Request) {
     ]);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const fallback = await supabase.from("meals").insert([
+        {
+          user_id: user.id,
+          food_name: name,
+          calories,
+          protein,
+          carbs,
+          fats: fat,
+        },
+      ]);
+
+      if (fallback.error) {
+        return NextResponse.json({ error: fallback.error.message }, { status: 500 });
+      }
+
+      return NextResponse.json({ message: "Meal logged", data: fallback.data }, { status: 201 });
     }
 
     return NextResponse.json({ message: "Meal logged", data }, { status: 201 });

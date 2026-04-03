@@ -41,33 +41,36 @@ export default function WorkoutsPage() {
   }, []);
 
   return (
-    <main className="p-6">
-      <h1 className="mb-4 text-3xl font-bold">Workouts</h1>
+    <main className="min-h-screen p-8">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-2 text-3xl font-semibold text-slate-900">Workouts</h1>
+        <p className="mb-8 text-slate-600">Track all your workout sessions.</p>
 
-      {loading ? <Loader /> : null}
-      {error ? <ErrorMessage message={error} /> : null}
+        {loading ? <Loader /> : null}
+        {error ? <ErrorMessage message={error} /> : null}
 
-      {!loading && !error && workouts.length === 0 ? (
-        <EmptyState
-          title="No workouts yet"
-          description="Log your first workout from the Add Workout page."
-        />
-      ) : null}
+        {!loading && !error && workouts.length === 0 ? (
+          <EmptyState
+            title="No workouts yet"
+            description="Log your first workout from the Add Workout page."
+          />
+        ) : null}
 
-      {!loading && !error && workouts.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          {workouts.map((workout) => (
-            <WorkoutCard
-              key={workout.id}
-              exercise={workout.exercise}
-              sets={workout.sets}
-              reps={workout.reps}
-              duration={workout.duration}
-              date={new Date(workout.date).toLocaleDateString()}
-            />
-          ))}
-        </div>
-      ) : null}
+        {!loading && !error && workouts.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {workouts.map((workout) => (
+              <WorkoutCard
+                key={workout.id}
+                exercise={workout.exercise}
+                sets={workout.sets}
+                reps={workout.reps}
+                duration={workout.duration}
+                date={new Date(workout.date).toLocaleDateString()}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
     </main>
   );
 }

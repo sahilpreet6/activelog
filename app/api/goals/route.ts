@@ -8,6 +8,8 @@ type GoalBody = {
   current_value?: number;
 };
 
+type GoalRow = Record<string, unknown>;
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -37,7 +39,16 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ goals: (data ?? []) as Goal[] }, { status: 200 });
+    const goals = ((data ?? []) as GoalRow[]).map((row) => ({
+      id: String(row.id ?? ""),
+      user_id: String(row.user_id ?? ""),
+      title: String(row.title ?? row.goal_name ?? ""),
+      target_value: Number(row.target_value ?? 0),
+      current_value: Number(row.current_value ?? 0),
+      created_at: String(row.created_at ?? ""),
+    })) as Goal[];
+
+    return NextResponse.json({ goals }, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Unable to fetch goals." }, { status: 500 });
   }
@@ -79,7 +90,21 @@ export async function POST(request: Request) {
     ]);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const fallback = await supabase.from("goals").insert([
+        {
+          user_id: user.id,
+          goal_name: title,
+          target_value,
+          current_value,
+          goal_type: "general",
+        },
+      ]);
+
+      if (fallback.error) {
+        return NextResponse.json({ error: fallback.error.message }, { status: 500 });
+      }
+
+      return NextResponse.json({ message: "Goal created", data: fallback.data }, { status: 201 });
     }
 
     return NextResponse.json({ message: "Goal created", data }, { status: 201 });

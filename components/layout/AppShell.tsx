@@ -21,7 +21,7 @@ export default function AppShell({ children }: AppShellProps) {
   return (
     <>
       <Navbar />
-      <div className="mx-auto flex w-full max-w-6xl flex-1">
+      <div className="flex w-full flex-1">
         <Sidebar />
         <div className="w-full">{children}</div>
       </div>

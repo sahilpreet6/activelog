@@ -1,6 +1,6 @@
 # ActiveLog
 
-ActiveLog is a health and fitness tracker built for Web Development 2 (CPRG 306). The app focuses on simple, beginner-friendly workout and nutrition tracking with progress visibility.
+ActiveLog is a health and fitness tracker. The app focuses on simple, beginner-friendly workout and nutrition tracking with progress visibility.
 
 ## Team Split
 - Paolo
@@ -15,7 +15,7 @@ ActiveLog is a health and fitness tracker built for Web Development 2 (CPRG 306)
 - CRUD queries
 - server helpers
 
-- Sahilpreet
+- Sahilpreet Singh
 - auth pages
 - auth flow
 - protected layout/routes

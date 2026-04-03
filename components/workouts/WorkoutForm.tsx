@@ -99,38 +99,38 @@ export default function WorkoutForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-4">
-      <div className="space-y-2 rounded-lg border bg-white p-3">
-        <p className="text-sm font-medium">Search ExerciseDB</p>
-        <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="space-y-3 rounded-md border border-slate-200 bg-slate-50 p-4">
+        <p className="text-sm font-medium text-slate-700">Search ExerciseDB</p>
+        <div className="flex flex-col gap-3 sm:flex-row">
           <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search exercise name"
-            className="w-full rounded-lg border px-3 py-2"
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
           />
           <button
             type="button"
             onClick={handleExerciseSearch}
             disabled={searchLoading}
-            className="rounded-lg border px-3 py-2 text-sm disabled:opacity-60"
+            className="rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-50 disabled:opacity-60"
           >
             {searchLoading ? "Searching..." : "Search"}
           </button>
         </div>
         {exerciseResults.length > 0 ? (
-          <ul className="max-h-36 space-y-2 overflow-auto text-sm">
+          <ul className="max-h-40 space-y-2 overflow-auto pr-1 text-sm">
             {exerciseResults.map((exercise) => (
               <li key={exercise.id}>
                 <button
                   type="button"
-                  className="w-full rounded-md border px-3 py-2 text-left hover:bg-slate-50"
+                  className="w-full rounded-md border border-slate-200 px-3 py-2 text-left hover:bg-slate-50"
                   onClick={() => {
                     setForm((prev) => ({ ...prev, exercise: exercise.name }));
                     setSearchTerm(exercise.name);
                   }}
                 >
-                  <p className="font-medium capitalize">{exercise.name}</p>
+                  <p className="font-medium capitalize text-slate-900">{exercise.name}</p>
                   <p className="text-xs text-slate-600">
                     {exercise.bodyPart} · {exercise.target} · {exercise.equipment}
                   </p>
@@ -141,49 +141,90 @@ export default function WorkoutForm() {
         ) : null}
       </div>
 
-      <input
-        name="exercise"
-        placeholder="Exercise name"
-        value={form.exercise}
-        onChange={handleChange}
-        className="w-full rounded-lg border px-4 py-2"
-        required
-      />
-      <input
-        name="sets"
-        type="number"
-        min={1}
-        placeholder="Sets"
-        value={form.sets}
-        onChange={handleChange}
-        className="w-full rounded-lg border px-4 py-2"
-        required
-      />
-      <input
-        name="reps"
-        type="number"
-        min={1}
-        placeholder="Reps"
-        value={form.reps}
-        onChange={handleChange}
-        className="w-full rounded-lg border px-4 py-2"
-        required
-      />
-      <input
-        name="duration"
-        type="number"
-        min={1}
-        placeholder="Duration (minutes)"
-        value={form.duration}
-        onChange={handleChange}
-        className="w-full rounded-lg border px-4 py-2"
-        required
-      />
-      <button type="submit" className="rounded-lg bg-black px-4 py-2 text-white">
+      <div>
+        <label htmlFor="exercise" className="mb-1 block text-sm font-medium text-slate-700">
+          Exercise
+        </label>
+        <input
+          id="exercise"
+          name="exercise"
+          placeholder="e.g., Push Ups"
+          value={form.exercise}
+          onChange={handleChange}
+          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+          required
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <label htmlFor="sets" className="mb-1 block text-sm font-medium text-slate-700">
+            Sets
+          </label>
+          <input
+            id="sets"
+            name="sets"
+            type="number"
+            min={1}
+            placeholder="3"
+            value={form.sets}
+            onChange={handleChange}
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="reps" className="mb-1 block text-sm font-medium text-slate-700">
+            Reps
+          </label>
+          <input
+            id="reps"
+            name="reps"
+            type="number"
+            min={1}
+            placeholder="12"
+            value={form.reps}
+            onChange={handleChange}
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="duration" className="mb-1 block text-sm font-medium text-slate-700">
+            Minutes
+          </label>
+          <input
+            id="duration"
+            name="duration"
+            type="number"
+            min={1}
+            placeholder="15"
+            value={form.duration}
+            onChange={handleChange}
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:outline-none"
+            required
+          />
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded-md bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+      >
         {loading ? "Saving..." : "Save Workout"}
       </button>
-      {message ? <p className="text-sm text-green-700">{message}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+
+      {message ? (
+        <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
     </form>
   );
 }

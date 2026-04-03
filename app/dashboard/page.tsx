@@ -70,36 +70,38 @@ export default function DashboardPage() {
   );
 
   return (
-    <main className="p-6">
-      <h1 className="mb-4 text-3xl font-bold">Dashboard</h1>
-      <p className="mb-6 text-slate-600">Welcome to your health dashboard.</p>
+    <main className="min-h-screen p-8">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-2 text-3xl font-semibold text-slate-900">Dashboard</h1>
+        <p className="mb-8 text-slate-600">Overview of your activity.</p>
 
-      {loading ? <Loader /> : null}
-      {error ? <ErrorMessage message={error} /> : null}
+        {loading ? <Loader /> : null}
+        {error ? <ErrorMessage message={error} /> : null}
 
-      {!loading && !error ? (
-        <div className="grid gap-4 md:grid-cols-3">
-          <article className="rounded-xl border bg-white p-4">
-            <h2 className="text-sm font-medium text-slate-600">Workout Sessions</h2>
-            <p className="mt-2 text-3xl font-bold">{workouts.length}</p>
-            <p className="mt-1 text-sm text-slate-500">{totalWorkoutMinutes} total minutes</p>
-          </article>
+        {!loading && !error ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            <article className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="text-sm font-medium text-slate-600">Workout Sessions</h2>
+              <p className="mt-2 text-3xl font-semibold text-slate-900">{workouts.length}</p>
+              <p className="mt-2 text-sm text-slate-600">{totalWorkoutMinutes} total minutes</p>
+            </article>
 
-          <article className="rounded-xl border bg-white p-4">
-            <h2 className="text-sm font-medium text-slate-600">Nutrition Entries</h2>
-            <p className="mt-2 text-3xl font-bold">{meals.length}</p>
-            <p className="mt-1 text-sm text-slate-500">Avg {averageCalories} calories per meal</p>
-          </article>
+            <article className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="text-sm font-medium text-slate-600">Nutrition Entries</h2>
+              <p className="mt-2 text-3xl font-semibold text-slate-900">{meals.length}</p>
+              <p className="mt-2 text-sm text-slate-600">Avg {averageCalories} calories per meal</p>
+            </article>
 
-          <article className="rounded-xl border bg-white p-4">
-            <h2 className="text-sm font-medium text-slate-600">Goals Completed</h2>
-            <p className="mt-2 text-3xl font-bold">
-              {completedGoals}/{goals.length}
-            </p>
-            <p className="mt-1 text-sm text-slate-500">Track your consistency weekly</p>
-          </article>
-        </div>
-      ) : null}
+            <article className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="text-sm font-medium text-slate-600">Goals Completed</h2>
+              <p className="mt-2 text-3xl font-semibold text-slate-900">
+                {completedGoals}/{goals.length}
+              </p>
+              <p className="mt-2 text-sm text-slate-600">Track your consistency weekly</p>
+            </article>
+          </div>
+        ) : null}
+      </div>
     </main>
   );
 }
